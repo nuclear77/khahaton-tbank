@@ -1,0 +1,410 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список покупок - B8 Рецепты</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark-red: #6A0C0C;
+            --primary-matte-red: #7A1C1C;
+            --accent-dark: #1A0A0A;
+            --accent-darker: #0F0505;
+            --card-bg: #251515;
+            --text-light: #F0F0F0;
+            --text-muted: #B0B0B0;
+        }
+
+        body {
+            background-color: var(--accent-darker);
+            color: var(--text-light);
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
+            font-weight: 400;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--accent-dark) 0%, var(--primary-dark-red) 100%);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.4);
+            border-bottom: 1px solid rgba(106, 12, 12, 0.5);
+        }
+
+        .brand-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            width: 32px;
+            height: 32px;
+            margin-right: 10px;
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+            font-size: 1.3rem;
+            color: var(--text-light) !important;
+            letter-spacing: 0.5px;
+            margin: 0;
+        }
+
+        /* Исправленные стили для выпадающего меню */
+        .dropdown-menu {
+            background: linear-gradient(135deg, var(--card-bg) 0%, #2A1818 100%) !important;
+            border: 1px solid var(--primary-dark-red) !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        .dropdown-item {
+            color: var(--text-light) !important;
+            font-weight: 400;
+            transition: all 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--primary-matte-red) !important;
+            color: var(--text-light) !important;
+            font-weight: 500;
+        }
+
+        .nav-link {
+            color: var(--text-light) !important;
+            font-weight: 500;
+        }
+
+        .navbar-toggler {
+            border-color: rgba(240, 240, 240, 0.3);
+        }
+
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28240, 240, 240, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+
+        .shopping-container {
+            background: linear-gradient(135deg, var(--card-bg) 0%, #2A1818 100%);
+            border-radius: 15px;
+            border: 1px solid rgba(106, 12, 12, 0.3);
+            padding: 30px;
+            margin-top: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .shopping-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--primary-matte-red);
+            transition: all 0.3s ease;
+        }
+
+        .shopping-item.completed {
+            opacity: 0.6;
+            border-left-color: #28a745;
+        }
+
+        .shopping-item.completed .item-name {
+            text-decoration: line-through;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state p {
+            color: var(--text-light);
+            opacity: 0.9;
+        }
+
+        .shopping-cart-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            margin-right: 15px;
+        }
+
+        .shopping-cart-btn:hover {
+            transform: translateY(-2px);
+            color: white;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-outline-light {
+            border-color: var(--text-light);
+            color: var(--text-light);
+        }
+
+        .btn-outline-light:hover {
+            background-color: var(--text-light);
+            color: var(--accent-dark);
+        }
+
+        /* Адаптивность для мобильных устройств */
+        @media (max-width: 768px) {
+            .logo {
+                width: 28px;
+                height: 28px;
+                margin-right: 8px;
+            }
+
+            .navbar-brand {
+                font-size: 1.1rem;
+            }
+
+            .shopping-container {
+                padding: 20px;
+                margin-top: 20px;
+                border-radius: 10px;
+            }
+
+            .shopping-item {
+                padding: 12px;
+            }
+
+            .shopping-cart-btn {
+                padding: 6px 12px;
+                font-size: 0.9rem;
+                margin-right: 10px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .shopping-container {
+                padding: 15px;
+                margin-top: 15px;
+            }
+
+            .brand-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .logo {
+                margin-right: 0;
+                margin-bottom: 5px;
+            }
+
+            .shopping-item {
+                padding: 10px;
+            }
+
+            .btn-group .btn {
+                padding: 4px 8px;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .navbar-brand {
+                font-size: 1rem;
+            }
+
+            .shopping-container {
+                padding: 10px;
+            }
+
+            .d-flex.justify-content-between.align-items-center.mb-4 {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Навигационная панель -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <div class="brand-container">
+                <img src="{% static 'B8_lightmode.png' %}" class="logo" alt="B8 Logo">
+                <a class="navbar-brand" href="{% url 'home' %}">B8 РЕЦЕПТЫ</a>
+            </div>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Переключить навигацию">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                        <!-- Кнопка списка покупок в навигационной панели -->
+                        <li class="nav-item">
+                            <a class="shopping-cart-btn" href="{% url 'shopping_list' %}">
+                                🛒 Список покупок
+                            </a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                ПРИВЕТ, {{ user.username|upper }}
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="{% url 'home' %}">Главная</a></li>
+                                <li><a class="dropdown-item" href="{% url 'profile' %}">Профиль</a></li>
+                                <li><a class="dropdown-item" href="{% url 'catalog' %}">Каталог</a></li>
+                                <li><a class="dropdown-item" href="{% url 'recipes' %}">Рецепты</a></li>
+                                <li><a class="dropdown-item" href="{% url 'menu' %}">Меню</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'fridge' %}">Ваш холодильник</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'logout' %}">Выйти</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <div class="auth-links d-flex">
+                            <a href="{% url 'login' %}" class="btn btn-outline-light">Войти</a>
+                            <a href="{% url 'register' %}" class="btn btn-outline-light">Регистрация</a>
+                        </div>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="shopping-container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Список покупок</h2>
+                {% if items %}
+                <button class="btn btn-outline-danger" onclick="clearShoppingList()">
+                    🗑️ Очистить список
+                </button>
+                {% endif %}
+            </div>
+
+            {% if items %}
+                <div id="shopping-list">
+                    {% for item in items %}
+                    <div class="shopping-item {% if item.completed %}completed{% endif %}" id="item-{{ item.id }}">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="flex-grow-1">
+                                <span class="item-name">{{ item.name }}</span>
+                                {% if item.quantity %}
+                                <small class="text-muted ms-2">({{ item.quantity }})</small>
+                                {% endif %}
+                            </div>
+                            <div class="btn-group">
+                                <button class="btn btn-sm {% if item.completed %}btn-warning{% else %}btn-success{% endif %}"
+                                        onclick="toggleShoppingItem({{ item.id }})">
+                                    {% if item.completed %}↶{% else %}✓{% endif %}
+                                </button>
+                                <button class="btn btn-sm btn-danger" onclick="removeShoppingItem({{ item.id }})">
+                                    ×
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <div style="font-size: 4rem;">🛒</div>
+                    <h4>Список покупок пуст</h4>
+                    <p>Добавляйте ингредиенты из рецептов в список покупок</p>
+                    <a href="{% url 'recipes' %}" class="btn btn-primary mt-3">Перейти к рецептам</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function toggleShoppingItem(itemId) {
+            fetch("{% url 'toggle_shopping_item' %}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCSRFToken(),
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `item_id=${itemId}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const itemElement = document.getElementById(`item-${itemId}`);
+                    if (data.completed) {
+                        itemElement.classList.add('completed');
+                    } else {
+                        itemElement.classList.remove('completed');
+                    }
+                    // Обновляем кнопку
+                    const button = itemElement.querySelector('.btn-group .btn:first-child');
+                    button.textContent = data.completed ? '↶' : '✓';
+                    button.className = data.completed ?
+                        'btn btn-sm btn-warning' : 'btn btn-sm btn-success';
+                } else {
+                    alert('Ошибка: ' + data.error);
+                }
+            });
+        }
+
+        function removeShoppingItem(itemId) {
+            if (!confirm('Удалить ингредиент из списка?')) return;
+
+            fetch("{% url 'remove_shopping_item' %}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCSRFToken(),
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `item_id=${itemId}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById(`item-${itemId}`).remove();
+                    // Если список пуст, показываем empty state
+                    if (document.querySelectorAll('.shopping-item').length === 0) {
+                        location.reload();
+                    }
+                } else {
+                    alert('Ошибка: ' + data.error);
+                }
+            });
+        }
+
+        function clearShoppingList() {
+            if (!confirm('Очистить весь список покупок?')) return;
+
+            fetch("{% url 'clear_shopping_list' %}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCSRFToken(),
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Ошибка: ' + data.error);
+                }
+            });
+        }
+
+        function getCSRFToken() {
+            const cookieValue = document.cookie
+                .split('; ')
+                .find(row => row.startsWith('csrftoken='))
+                ?.split('=')[1];
+            return cookieValue || '';
+        }
+    </script>
+</body>
+</html>

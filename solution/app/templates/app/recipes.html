@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B8 Рецепты</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Подключение шрифта Montserrat -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark-red: #6A0C0C;
+            --primary-matte-red: #7A1C1C;
+            --accent-dark: #1A0A0A;
+            --accent-darker: #0F0505;
+            --card-bg: #251515;
+            --text-light: #F0F0F0;
+            --text-muted: #B0B0B0;
+        }
+
+        body {
+            background-color: var(--accent-darker);
+            color: var(--text-light);
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--accent-dark) 0%, var(--primary-dark-red) 100%);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.4);
+            border-bottom: 1px solid rgba(106, 12, 12, 0.5);
+        }
+
+        .brand-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            margin-right: 12px;
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+            font-size: 1.5rem;
+            color: var(--text-light) !important;
+            letter-spacing: 0.5px;
+            margin: 0;
+        }
+
+        /* Исправленные стили для выпадающего меню */
+        .dropdown-menu {
+            background: linear-gradient(135deg, var(--card-bg) 0%, #2A1818 100%) !important;
+            border: 1px solid var(--primary-dark-red) !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        .dropdown-item {
+            color: var(--text-light) !important;
+            font-weight: 400;
+            transition: all 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--primary-matte-red) !important;
+            color: var(--text-light) !important;
+            font-weight: 500;
+        }
+
+        .section-title {
+            color: var(--text-light);
+            border-bottom: 2px solid var(--primary-matte-red);
+            padding-bottom: 12px;
+            margin-bottom: 25px;
+            font-weight: 600;
+            text-align: center;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-size: 1.5rem;
+        }
+
+        .dish-card {
+            background: linear-gradient(135deg, var(--card-bg) 0%, #2A1818 100%);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(106, 12, 12, 0.3);
+            height: 100%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .dish-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+            border-color: rgba(122, 28, 28, 0.5);
+        }
+
+        .dish-img {
+            height: 150px;
+            background: linear-gradient(135deg, var(--primary-dark-red) 0%, #5A0A0A 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dish-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .dish-card:hover .dish-img img {
+            transform: scale(1.05);
+        }
+
+        .dish-img::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .dish-name {
+            font-weight: 500;
+            color: var(--text-light);
+            padding: 15px;
+            margin: 0;
+            font-size: 1rem;
+            border-top: 1px solid rgba(106, 12, 12, 0.3);
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+
+        footer {
+            background: linear-gradient(135deg, var(--accent-dark) 0%, var(--primary-dark-red) 100%);
+            color: var(--text-light);
+            padding: 25px 0;
+            margin-top: 40px;
+            border-top: 1px solid rgba(106, 12, 12, 0.5);
+        }
+
+        .nav-link {
+            color: var(--text-light) !important;
+            font-weight: 500;
+        }
+
+        .navbar-toggler {
+            border-color: rgba(240, 240, 240, 0.3);
+        }
+
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28240, 240, 240, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+
+        /* Кнопка "Наверх" */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-dark-red) 0%, var(--primary-matte-red) 100%);
+            color: var(--text-light);
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Кнопка лайка */
+        .like-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .like-btn:hover:not(:disabled) {
+            background: rgba(122, 28, 28, 0.9);
+            transform: scale(1.1);
+        }
+
+        .like-btn.liked {
+            background: var(--primary-matte-red);
+        }
+
+        .like-btn.liked .heart-icon {
+            color: #ff6b6b;
+        }
+
+        .like-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .heart-icon {
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        /* Фильтры */
+        .filters-section {
+            background: linear-gradient(135deg, var(--card-bg) 0%, #2A1818 100%);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(106, 12, 12, 0.3);
+        }
+
+        .filter-group {
+            margin-bottom: 15px;
+        }
+
+        .filter-label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-light);
+        }
+
+        .form-select, .form-control {
+            background: var(--accent-dark);
+            border: 1px solid rgba(106, 12, 12, 0.5);
+            color: var(--text-light);
+        }
+
+        .form-select:focus, .form-control:focus {
+            background: var(--accent-dark);
+            border-color: var(--primary-matte-red);
+            color: var(--text-light);
+            box-shadow: 0 0 0 0.2rem rgba(122, 28, 28, 0.25);
+        }
+
+        .search-btn {
+            background: linear-gradient(135deg, var(--primary-dark-red) 0%, var(--primary-matte-red) 100%);
+            border: none;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .search-btn:hover {
+            background: linear-gradient(135deg, var(--primary-matte-red) 0%, var(--primary-dark-red) 100%);
+            transform: translateY(-2px);
+        }
+
+        .reset-btn {
+            background: transparent;
+            border: 1px solid var(--primary-matte-red);
+            color: var(--text-light);
+        }
+
+        .reset-btn:hover {
+            background: var(--primary-matte-red);
+            color: var(--text-light);
+        }
+
+        /* Стили для кнопки списка покупок */
+        .shopping-cart-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            margin-right: 15px;
+        }
+
+        .shopping-cart-btn:hover {
+            transform: translateY(-2px);
+            color: white;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+
+        /* Адаптивность для мобильных устройств */
+        @media (max-width: 768px) {
+            .logo {
+                width: 32px;
+                height: 32px;
+                margin-right: 8px;
+            }
+
+            .navbar-brand {
+                font-size: 1.2rem;
+            }
+
+            .dish-img {
+                height: 120px;
+            }
+
+            .dish-name {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+
+            .back-to-top {
+                width: 44px;
+                height: 44px;
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .like-btn {
+                width: 30px;
+                height: 30px;
+            }
+
+            .heart-icon {
+                font-size: 16px;
+            }
+
+            .shopping-cart-btn {
+                padding: 6px 12px;
+                font-size: 0.9rem;
+                margin-right: 10px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .dish-img {
+                height: 100px;
+            }
+
+            .dish-name {
+                font-size: 0.85rem;
+                padding: 10px;
+            }
+        }
+
+        /* Стили для уведомлений */
+        .alert-toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1050;
+            min-width: 300px;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+        }
+
+        .alert-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Навигационная панель -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <!-- Контейнер для логотипа и названия -->
+            <div class="brand-container">
+                <img src="https://liquipedia.net/commons/images/c/c6/B8_lightmode.png" class="logo" alt="B8 Logo">
+                <a class="navbar-brand" href="{% url 'home' %}">B8 РЕЦЕПТЫ</a>
+            </div>
+
+            <!-- Кнопка для мобильных устройств -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Переключить навигацию">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Выпадающий список в правом верхнем углу -->
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                        <!-- Кнопка списка покупок в навигационной панели -->
+                        <li class="nav-item">
+                            <a class="shopping-cart-btn" href="{% url 'shopping_list' %}">
+                                🛒 Список покупок
+                            </a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                ПРИВЕТ, {{ user.username|upper }}
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="{% url 'home' %}">Главная</a></li>
+                                <li><a class="dropdown-item" href="{% url 'profile' %}">Профиль</a></li>
+                                <li><a class="dropdown-item" href="{% url 'catalog' %}">Каталог</a></li>
+                                <li><a class="dropdown-item" href="{% url 'recipes' %}">Рецепты</a></li>
+                                <li><a class="dropdown-item" href="{% url 'menu' %}">Меню</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'fridge' %}">Ваш холодильник</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'logout' %}">Выйти</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <div class="auth-links d-flex">
+                            <a href="{% url 'login' %}" class="btn btn-outline-light">Войти</a>
+                            <a href="{% url 'register' %}" class="btn btn-outline-light">Регистрация</a>
+                        </div>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Уведомления -->
+    <div id="alertToast" class="alert alert-success alert-toast" role="alert" style="display: none;">
+        <div class="d-flex">
+            <div class="toast-body"></div>
+            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Закрыть"></button>
+        </div>
+    </div>
+
+    <!-- Основной контент -->
+    <div class="container mt-4">
+        <h2 class="section-title">Все рецепты</h2>
+
+        <!-- Секция фильтров -->
+        <div class="filters-section">
+            <form method="GET" action="{% url 'recipes' %}">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="filter-group">
+                            <label class="filter-label">Поиск по названию</label>
+                            <input type="text" class="form-control" name="search" placeholder="Введите название блюда..." value="{{ search_query }}">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="filter-group">
+                            <label class="filter-label">Кухня</label>
+                            <select class="form-select" name="cuisine">
+                                <option value="">Все кухни</option>
+                                {% for cuisine in all_cuisines %}
+                                <option value="{{ cuisine.name }}" {% if selected_cuisine == cuisine.name %}selected{% endif %}>
+                                    {{ cuisine.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="filter-group">
+                            <label class="filter-label">Сложность</label>
+                            <select class="form-select" name="difficulty">
+                                <option value="">Любая сложность</option>
+                                <option value="easy" {% if selected_difficulty == 'easy' %}selected{% endif %}>Легко</option>
+                                <option value="medium" {% if selected_difficulty == 'medium' %}selected{% endif %}>Средне</option>
+                                <option value="hard" {% if selected_difficulty == 'hard' %}selected{% endif %}>Сложно</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <div class="filter-group w-100">
+                            <button type="submit" class="btn search-btn w-100 mb-2">Найти</button>
+                            <a href="{% url 'recipes' %}" class="btn reset-btn w-100">Сбросить</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Контейнеры с блюдами -->
+        <div class="row" id="dishes-container">
+            {% for dish in dishes %}
+            <div class="col-md-3 col-sm-4 col-6 mb-4">
+                <div class="dish-card" onclick="window.location.href='{% url 'dish_detail' dish.id %}'">
+                    <button type="button" class="like-btn {% if dish.id in liked_dishes_ids %}liked{% endif %}"
+                            data-dish-id="{{ dish.id }}"
+                            {% if not user.is_authenticated %}disabled title="Войдите, чтобы добавить в избранное"{% endif %}>
+                        <span class="heart-icon">
+                            {% if dish.id in liked_dishes_ids %}♥{% else %}♡{% endif %}
+                        </span>
+                    </button>
+                    <div class="dish-img">
+                        {% if dish.image %}
+                            <img src="{{ dish.image.url }}" alt="{{ dish.name }}">
+                        {% else %}
+                            {{ dish.name }}
+                        {% endif %}
+                    </div>
+                    <h5 class="dish-name">{{ dish.name }}</h5>
+                    <div class="dish-info p-2" style="border-top: 1px solid rgba(106, 12, 12, 0.3); font-size: 0.8rem; color: var(--text-muted);">
+                        <div class="d-flex justify-content-between">
+                            <span>⏱️ {{ dish.cooking_time }} мин</span>
+                            <span>📊 {{ dish.get_difficulty_display }}</span>
+                        </div>
+                        <div class="text-center mt-1">
+                            <span>🍽️ {{ dish.cuisine.name }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <h4>Рецепты не найдены</h4>
+                <p class="text-muted">Попробуйте изменить параметры поиска</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Пагинация -->
+        {% if dishes.has_other_pages %}
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if dishes.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ dishes.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_cuisine %}&cuisine={{ selected_cuisine }}{% endif %}{% if selected_difficulty %}&difficulty={{ selected_difficulty }}{% endif %}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+
+                {% for i in dishes.paginator.page_range %}
+                {% if dishes.number == i %}
+                <li class="page-item active"><span class="page-link">{{ i }}</span></li>
+                {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{ i }}{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_cuisine %}&cuisine={{ selected_cuisine }}{% endif %}{% if selected_difficulty %}&difficulty={{ selected_difficulty }}{% endif %}">{{ i }}</a></li>
+                {% endif %}
+                {% endfor %}
+
+                {% if dishes.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ dishes.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_cuisine %}&cuisine={{ selected_cuisine }}{% endif %}{% if selected_difficulty %}&difficulty={{ selected_difficulty }}{% endif %}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+
+    <!-- Подвал -->
+    <footer>
+        <div class="container text-center">
+            <p>&copy; 2025 B8 ХАКАТОН</p>
+        </div>
+    </footer>
+
+    <!-- Кнопка "Наверх" -->
+    <button class="back-to-top" id="backToTop">↑</button>
+
+    <!-- Bootstrap JS и зависимости -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Пользовательский JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Кнопка "Наверх"
+            const backToTopButton = document.getElementById('backToTop');
+
+            // Показать/скрыть кнопку при прокрутке
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTopButton.classList.add('show');
+                } else {
+                    backToTopButton.classList.remove('show');
+                }
+            });
+
+            // Прокрутка к верху при клике
+            backToTopButton.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            // Функция для показа уведомлений
+            function showAlert(message, type = 'success') {
+                const toast = document.getElementById('alertToast');
+                const toastBody = toast.querySelector('.toast-body');
+
+                toast.className = `alert alert-${type} alert-toast`;
+                toastBody.textContent = message;
+                toast.style.display = 'block';
+
+                setTimeout(() => {
+                    toast.classList.add('show');
+                }, 100);
+
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        toast.style.display = 'none';
+                    }, 300);
+                }, 3000);
+            }
+
+            // Обработчик для кнопок лайка - ИСПРАВЛЕННАЯ ВЕРСИЯ
+            document.querySelectorAll('.like-btn:not(:disabled)').forEach(button => {
+                button.addEventListener('click', async function(e) {
+                    // Останавливаем всплытие события, чтобы не сработал переход на страницу блюда
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const dishId = this.getAttribute('data-dish-id');
+
+                    try {
+                        const response = await fetch(`/dish/${dishId}/toggle_like/`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': getCSRFToken(),
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                        });
+
+                        const data = await response.json();
+
+                        if (data.success) {
+                            const heartIcon = this.querySelector('.heart-icon');
+                            if (data.liked) {
+                                this.classList.add('liked');
+                                heartIcon.textContent = '♥';
+                                showAlert('Рецепт добавлен в избранное');
+                                // Анимация
+                                this.style.transform = 'scale(1.2)';
+                                setTimeout(() => {
+                                    this.style.transform = 'scale(1)';
+                                }, 300);
+                            } else {
+                                this.classList.remove('liked');
+                                heartIcon.textContent = '♡';
+                                showAlert('Рецепт удален из избранного');
+                            }
+                        } else {
+                            showAlert('Ошибка: ' + data.error, 'danger');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        showAlert('Произошла ошибка при добавлении в избранное', 'danger');
+                    }
+                });
+            });
+
+            // Функция для получения CSRF токена
+            function getCSRFToken() {
+                const cookieValue = document.cookie
+                    .split('; ')
+                    .find(row => row.startsWith('csrftoken='))
+                    ?.split('=')[1];
+                return cookieValue || '';
+            }
+
+            // Закрытие уведомления по клику на крестик
+            const closeButton = document.querySelector('#alertToast .btn-close');
+            if (closeButton) {
+                closeButton.addEventListener('click', function() {
+                    const toast = document.getElementById('alertToast');
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        toast.style.display = 'none';
+                    }, 300);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
