@@ -1,0 +1,697 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Холодильник - B8 Рецепты</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark-red: #6A0C0C;
+            --primary-matte-red: #7A1C1C;
+            --accent-dark: #1A0A0A;
+            --accent-darker: #0F0505;
+            --card-bg: #251515;
+            --text-light: #F0F0F0;
+            --text-muted: #F0F0F0;
+        }
+
+        body {
+            background-color: var(--accent-darker);
+            color: var(--text-light);
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--accent-dark) 0%, var(--primary-dark-red) 100%);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.4);
+            border-bottom: 1px solid rgba(106, 12, 12, 0.5);
+        }
+
+        .brand-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            margin-right: 12px;
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+            font-size: 1.5rem;
+            color: var(--text-light) !important;
+            letter-spacing: 0.5px;
+            margin: 0;
+        }
+
+        /* Исправленные стили для выпадающего меню */
+        .dropdown-menu {
+            background: linear-gradient(135deg, var(--card-bg) 0%, #2A1818 100%) !important;
+            border: 1px solid var(--primary-dark-red) !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        .dropdown-item {
+            color: var(--text-light) !important;
+            font-weight: 400;
+            transition: all 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--primary-matte-red) !important;
+            color: var(--text-light) !important;
+            font-weight: 500;
+        }
+
+        .fridge-container {
+            background: linear-gradient(135deg, var(--card-bg) 0%, #2A1818 100%);
+            border-radius: 15px;
+            border: 1px solid rgba(106, 12, 12, 0.3);
+            padding: 30px;
+            margin-top: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .ingredient-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .ingredient-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .ingredient-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            border: none;
+        }
+
+        .user-info {
+            color: var(--text-light);
+            margin-right: 15px;
+            font-weight: 500;
+        }
+
+        .auth-links .btn {
+            margin-left: 10px;
+        }
+
+        .btn-outline-light {
+            border-color: var(--text-light);
+            color: var(--text-light);
+        }
+
+        .btn-outline-light:hover {
+            background-color: var(--text-light);
+            color: var(--accent-dark);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+
+        .dish-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 0;
+            margin-bottom: 20px;
+            border: 1px solid rgba(106, 12, 12, 0.3);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .dish-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+            border-color: rgba(122, 28, 28, 0.5);
+        }
+
+        .dish-image-container {
+            height: 180px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dish-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .dish-card:hover .dish-image {
+            transform: scale(1.05);
+        }
+
+        .dish-image-placeholder {
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-dark-red) 0%, #5A0A0A 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .dish-content {
+            padding: 15px;
+        }
+
+        .dish-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .dish-title {
+            font-weight: 600;
+            color: var(--text-light);
+            margin: 0;
+            flex: 1;
+        }
+
+        .match-badge {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .dish-description {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .dish-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .dish-actions {
+            margin-top: 10px;
+            text-align: right;
+        }
+
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Стили для кнопки списка покупок */
+        .shopping-cart-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            margin-right: 15px;
+        }
+
+        .shopping-cart-btn:hover {
+            transform: translateY(-2px);
+            color: white;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+
+        /* Кнопка "Наверх" */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-dark-red) 0%, var(--primary-matte-red) 100%);
+            color: var(--text-light);
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Адаптивность для мобильных устройств */
+        @media (max-width: 768px) {
+            .dish-image-container {
+                height: 150px;
+            }
+
+            .dish-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .match-badge {
+                margin-left: 0;
+                margin-top: 5px;
+            }
+
+            .dish-meta {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .dish-image-container {
+                height: 120px;
+            }
+
+            .fridge-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Навигационная панель -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <!-- Контейнер для логотипа и названия -->
+            <div class="brand-container">
+                <img src="{% static 'B8_lightmode.png' %}" class="logo" alt="B8 Logo">
+                <a class="navbar-brand" href="{% url 'home' %}">B8 РЕЦЕПТЫ</a>
+            </div>
+
+            <!-- Кнопка для мобильных устройств -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Переключить навигацию">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Выпадающий список в правом верхнем углу -->
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                        <!-- Кнопка списка покупок в навигационной панели -->
+                        <li class="nav-item">
+                            <a class="shopping-cart-btn" href="{% url 'shopping_list' %}">
+                                🛒 Список покупок
+                            </a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                ПРИВЕТ, {{ user.username|upper }}
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="{% url 'home' %}">Главная</a></li>
+                                <li><a class="dropdown-item" href="{% url 'profile' %}">Профиль</a></li>
+                                <li><a class="dropdown-item" href="{% url 'catalog' %}">Каталог</a></li>
+                                <li><a class="dropdown-item" href="{% url 'recipes' %}">Рецепты</a></li>
+                                <li><a class="dropdown-item" href="{% url 'menu' %}">Меню</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'fridge' %}">Ваш холодильник</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'logout' %}">Выйти</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <div class="auth-links d-flex">
+                            <a href="{% url 'login' %}" class="btn btn-outline-light">Войти</a>
+                            <a href="{% url 'register' %}" class="btn btn-outline-light">Регистрация</a>
+                        </div>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Основной контент -->
+    <div class="container">
+        <div class="fridge-container">
+            <h2>Ваш холодильник</h2>
+            <!-- Измененный текст на белый цвет -->
+            <p style="color: var(--text-light);">Добавляйте продукты, которые есть у вас дома, и мы подберем подходящие рецепты</p>
+
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <h5>Добавить продукты</h5>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Например, куриная грудка" id="ingredientInput">
+                        <button class="btn btn-primary" type="button" id="addIngredientBtn">Добавить</button>
+                    </div>
+
+                    <div class="mb-3">
+                        <h6>Популярные продукты:</h6>
+                        <div class="d-flex flex-wrap gap-2">
+                            <button class="btn btn-sm btn-outline-light quick-ingredient" data-ingredient="Куриная грудка">Куриная грудка</button>
+                            <button class="btn btn-sm btn-outline-light quick-ingredient" data-ingredient="Рис">Рис</button>
+                            <button class="btn btn-sm btn-outline-light quick-ingredient" data-ingredient="Помидоры">Помидоры</button>
+                            <button class="btn btn-sm btn-outline-light quick-ingredient" data-ingredient="Лук">Лук</button>
+                            <button class="btn btn-sm btn-outline-light quick-ingredient" data-ingredient="Сыр">Сыр</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h5>Ваши продукты</h5>
+                    <div id="ingredientsList">
+                        {% if fridge_items %}
+                            {% for item in fridge_items %}
+                            <div class="ingredient-item" data-item-id="{{ item.id }}">
+                                <span>{{ item.name }}</span>
+                                <div class="ingredient-actions">
+                                    <button class="btn btn-sm btn-danger remove-ingredient" data-item-id="{{ item.id }}">Удалить</button>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="empty-state">
+                                <p>Продукты не добавлены</p>
+                                <p class="small">Добавьте продукты, чтобы увидеть подходящие рецепты</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5>Подходящие рецепты</h5>
+                        <button class="btn btn-sm btn-outline-light" id="refreshRecommendationsBtn">Обновить рекомендации</button>
+                    </div>
+
+                    <div class="loading-spinner" id="loadingSpinner">
+                        <div class="spinner-border text-light" role="status">
+                            <span class="visually-hidden">Загрузка...</span>
+                        </div>
+                        <p class="mt-2">Ищем подходящие рецепты...</p>
+                    </div>
+
+                    <div id="recipesSection">
+                        {% if recommended_dishes.dishes %}
+                            <div class="alert alert-info">
+                                На основе ваших продуктов найдено {{ recommended_dishes.dishes|length }} рецептов
+                            </div>
+                            <div class="row">
+                                {% for dish in recommended_dishes.dishes %}
+                                <div class="col-lg-6 col-md-12 mb-4">
+                                    <div class="dish-card" onclick="window.location.href='{% url 'dish_detail' dish.id %}'" style="cursor: pointer;">
+                                        <div class="dish-image-container">
+                                            {% if dish.image %}
+                                                <img src="{{ dish.image.url }}" alt="{{ dish.name }}" class="dish-image">
+                                            {% else %}
+                                                <div class="dish-image-placeholder">
+                                                    {{ dish.name }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="dish-content">
+                                            <div class="dish-header">
+                                                <h6 class="dish-title">{{ dish.name }}</h6>
+                                                <span class="match-badge">{{ dish.match_percentage }}% совпадение</span>
+                                            </div>
+                                            <p class="dish-description">{{ dish.description|truncatewords:20 }}</p>
+                                            <div class="dish-meta">
+                                                <span>⏱️ {{ dish.cooking_time }} мин</span>
+                                                <span>📊 {{ dish.get_difficulty_display }}</span>
+                                                <span>🔥 {{ dish.calories }} ккал</span>
+                                            </div>
+                                            <div class="dish-actions">
+                                                <a href="{% url 'dish_detail' dish.id %}" class="btn btn-sm btn-outline-light">Смотреть рецепт</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="alert alert-info">
+                                Добавьте продукты в холодильник, чтобы увидеть подходящие рецепты
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Кнопка "Наверх" -->
+    <button class="back-to-top" id="backToTop">↑</button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ingredientInput = document.getElementById('ingredientInput');
+            const addIngredientBtn = document.getElementById('addIngredientBtn');
+            const ingredientsList = document.getElementById('ingredientsList');
+            const recipesSection = document.getElementById('recipesSection');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const refreshBtn = document.getElementById('refreshRecommendationsBtn');
+            const quickIngredients = document.querySelectorAll('.quick-ingredient');
+            const backToTopButton = document.getElementById('backToTop');
+
+            // Функция для кнопки "Наверх"
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTopButton.classList.add('show');
+                } else {
+                    backToTopButton.classList.remove('show');
+                }
+            });
+
+            backToTopButton.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            // Функция для добавления ингредиента
+            function addIngredient(ingredientName) {
+                if (ingredientName.trim() === '') return;
+
+                const formData = new FormData();
+                formData.append('ingredient', ingredientName.trim());
+                formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+                fetch('{% url "add_to_fridge" %}', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        updateIngredientsList();
+                        ingredientInput.value = '';
+                        loadRecommendations();
+                    } else {
+                        alert('Ошибка: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Произошла ошибка при добавлении продукта');
+                });
+            }
+
+            // Функция для удаления ингредиента
+            function removeIngredient(itemId) {
+                if (!confirm('Удалить продукт из холодильника?')) return;
+
+                const formData = new FormData();
+                formData.append('item_id', itemId);
+                formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+                fetch('{% url "remove_from_fridge" %}', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        updateIngredientsList();
+                        loadRecommendations();
+                    } else {
+                        alert('Ошибка: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Произошла ошибка при удалении продукта');
+                });
+            }
+
+            // Функция для обновления списка ингредиентов
+            function updateIngredientsList() {
+                // Перезагружаем страницу для обновления списка
+                window.location.reload();
+            }
+
+            // Функция для загрузки рекомендаций
+            function loadRecommendations() {
+                loadingSpinner.style.display = 'block';
+                recipesSection.style.display = 'none';
+
+                fetch('{% url "fridge_recommendations" %}')
+                .then(response => response.json())
+                .then(data => {
+                    loadingSpinner.style.display = 'none';
+                    recipesSection.style.display = 'block';
+
+                    if (data.success) {
+                        updateRecipesSection(data.dishes);
+                    } else {
+                        recipesSection.innerHTML = `
+                            <div class="alert alert-danger">
+                                Ошибка при загрузке рекомендаций: ${data.error}
+                            </div>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    loadingSpinner.style.display = 'none';
+                    recipesSection.style.display = 'block';
+                    recipesSection.innerHTML = `
+                        <div class="alert alert-danger">
+                            Произошла ошибка при загрузке рекомендаций
+                        </div>
+                    `;
+                    console.error('Error:', error);
+                });
+            }
+
+            // Функция для обновления секции с рецептами
+            function updateRecipesSection(dishes) {
+                if (dishes.length === 0) {
+                    recipesSection.innerHTML = `
+                        <div class="alert alert-info">
+                            По вашим продуктам не найдено подходящих рецептов. Попробуйте добавить больше продуктов.
+                        </div>
+                    `;
+                    return;
+                }
+
+                let recipesHTML = `
+                    <div class="alert alert-info">
+                        На основе ваших продуктов найдено ${dishes.length} рецептов
+                    </div>
+                    <div class="row">
+                `;
+
+                dishes.forEach(dish => {
+                    const imageHTML = dish.image_url ?
+                        `<img src="${dish.image_url}" alt="${dish.name}" class="dish-image">` :
+                        `<div class="dish-image-placeholder">${dish.name}</div>`;
+
+                    recipesHTML += `
+                        <div class="col-lg-6 col-md-12 mb-4">
+                            <div class="dish-card" onclick="window.location.href='/dish/${dish.id}'" style="cursor: pointer;">
+                                <div class="dish-image-container">
+                                    ${imageHTML}
+                                </div>
+                                <div class="dish-content">
+                                    <div class="dish-header">
+                                        <h6 class="dish-title">${dish.name}</h6>
+                                        <span class="match-badge">${dish.match_percentage}% совпадение</span>
+                                    </div>
+                                    <p class="dish-description">${dish.description}</p>
+                                    <div class="dish-meta">
+                                        <span>⏱️ ${dish.cooking_time} мин</span>
+                                        <span>📊 ${dish.difficulty}</span>
+                                        <span>🔥 ${dish.calories} ккал</span>
+                                    </div>
+                                    <div class="dish-actions">
+                                        <a href="/dish/${dish.id}" class="btn btn-sm btn-outline-light">Смотреть рецепт</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                recipesHTML += '</div>';
+                recipesSection.innerHTML = recipesHTML;
+            }
+
+            // Обработчик для кнопки добавления
+            addIngredientBtn.addEventListener('click', function() {
+                addIngredient(ingredientInput.value);
+            });
+
+            // Обработчик для Enter в поле ввода
+            ingredientInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    addIngredient(ingredientInput.value);
+                }
+            });
+
+            // Обработчики для быстрых ингредиентов
+            quickIngredients.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const ingredient = this.getAttribute('data-ingredient');
+                    addIngredient(ingredient);
+                });
+            });
+
+            // Обработчики для кнопок удаления
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-ingredient')) {
+                    const itemId = e.target.getAttribute('data-item-id');
+                    removeIngredient(itemId);
+                }
+            });
+
+            // Обработчик для кнопки обновления рекомендаций
+            refreshBtn.addEventListener('click', loadRecommendations);
+
+            // Инициализация
+            if (document.querySelectorAll('.ingredient-item').length === 0) {
+                recipesSection.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

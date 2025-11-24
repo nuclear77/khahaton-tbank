@@ -1,0 +1,45 @@
+{% load static %}
+<!-- Навигационная панель -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <!-- Контейнер для логотипа и названия -->
+        <div class="brand-container">
+            <img src="{% static 'B8_lightmode.png' %}" class="logo" alt="B8 Logo">
+            <a class="navbar-brand" href="{% url 'home' %}">B8 РЕЦЕПТЫ</a>
+        </div>
+
+        <!-- Кнопка для мобильных устройств -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Переключить навигацию">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Выпадающий список в правом верхнем углу -->
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                {% if user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            ПРИВЕТ, {{ user.username|upper }}
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="{% url 'home' %}">Главная</a></li>
+                            <li><a class="dropdown-item" href="{% url 'profile' %}">Профиль</a></li>
+                            <li><a class="dropdown-item" href="{% url 'catalog' %}">Каталог</a></li>
+                            <li><a class="dropdown-item" href="{% url 'recipes' %}">Рецепты</a></li>
+                            <li><a class="dropdown-item" href="{% url 'menu' %}">Меню</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'fridge' %}">Ваш холодильник</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'logout' %}">Выйти</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <div class="auth-links d-flex">
+                        <a href="{% url 'login' %}" class="btn btn-outline-light">Войти</a>
+                        <a href="{% url 'register' %}" class="btn btn-outline-light">Регистрация</a>
+                    </div>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

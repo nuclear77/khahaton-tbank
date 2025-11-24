@@ -1,0 +1,880 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B8 Календарь питания</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Подключение шрифта Montserrat -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark-red: #6A0C0C;
+            --primary-matte-red: #7A1C1C;
+            --accent-dark: #1A0A0A;
+            --accent-darker: #0F0505;
+            --card-bg: #251515;
+            --text-light: #F0F0F0;
+            --text-muted: #B0B0B0;
+        }
+
+        body {
+            background-color: var(--accent-darker);
+            color: var(--text-light);
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--accent-dark) 0%, var(--primary-dark-red) 100%);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.4);
+            border-bottom: 1px solid rgba(106, 12, 12, 0.5);
+        }
+
+        .brand-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            margin-right: 12px;
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+            font-size: 1.5rem;
+            color: var(--text-light) !important;
+            letter-spacing: 0.5px;
+            margin: 0;
+        }
+
+        /* Исправленные стили для выпадающего меню */
+        .dropdown-menu {
+            background: linear-gradient(135deg, var(--card-bg) 0%, #2A1818 100%) !important;
+            border: 1px solid var(--primary-dark-red) !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        .dropdown-item {
+            color: var(--text-light) !important;
+            font-weight: 400;
+            transition: all 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--primary-matte-red) !important;
+            color: var(--text-light) !important;
+            font-weight: 500;
+        }
+
+        .calendar-container {
+            background: linear-gradient(135deg, var(--card-bg) 0%, #2A1818 100%);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(106, 12, 12, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-nav-btn {
+            background: linear-gradient(135deg, var(--primary-dark-red) 0%, var(--primary-matte-red) 100%);
+            border: none;
+            color: var(--text-light);
+            padding: 8px 16px;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+
+        .calendar-day {
+            background: linear-gradient(135deg, var(--accent-dark) 0%, var(--card-bg) 100%);
+            border: 1px solid rgba(106, 12, 12, 0.3);
+            border-radius: 5px;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            padding: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .calendar-day:hover {
+            background: linear-gradient(135deg, var(--primary-dark-red) 0%, var(--primary-matte-red) 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .calendar-day.active {
+            background: linear-gradient(135deg, var(--primary-dark-red) 0%, var(--primary-matte-red) 100%);
+            box-shadow: 0 0 10px rgba(242, 103, 22, 0.5);
+        }
+
+        .day-number {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .meal-indicators {
+            display: flex;
+            justify-content: space-between;
+            margin-top: auto;
+            font-size: 0.7rem;
+        }
+
+        .meal-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .breakfast-dot { background-color: #4CAF50; }
+        .lunch-dot { background-color: #2196F3; }
+        .dinner-dot { background-color: #FF9800; }
+
+        .day-info {
+            background: linear-gradient(135deg, var(--card-bg) 0%, #2A1818 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(106, 12, 12, 0.3);
+            display: none;
+        }
+
+        .day-info.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .day-info-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(106, 12, 12, 0.3);
+        }
+
+        .day-info-title {
+            font-weight: 600;
+            color: var(--text-light);
+            margin: 0;
+        }
+
+        .meal-section {
+            margin-bottom: 20px;
+            background: rgba(37, 21, 21, 0.6);
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid rgba(106, 12, 12, 0.3);
+        }
+
+        .meal-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-light);
+        }
+
+        .meal-dot-large {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .dish-select-container {
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+        }
+
+        /* Исправленные стили для выпадающих списков */
+        .dish-select {
+            background: rgba(26, 10, 10, 0.9) !important;
+            border: 1px solid rgba(106, 12, 12, 0.5) !important;
+            border-radius: 5px;
+            color: var(--text-light) !important;
+            padding: 8px;
+            width: 100%;
+            flex: 1;
+        }
+
+        .dish-select option {
+            background: var(--accent-darker) !important;
+            color: var(--text-light) !important;
+            padding: 8px;
+        }
+
+        .dish-select:focus {
+            background: rgba(26, 10, 10, 0.95) !important;
+            border-color: var(--primary-matte-red) !important;
+            color: var(--text-light) !important;
+            box-shadow: 0 0 0 0.2rem rgba(122, 28, 28, 0.25) !important;
+        }
+
+        .dish-image-container {
+            width: 80px;
+            height: 80px;
+            border-radius: 5px;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 1px solid rgba(106, 12, 12, 0.3);
+        }
+
+        .dish-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .dish-image-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-dark-red) 0%, #5A0A0A 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            font-size: 0.8rem;
+            text-align: center;
+            padding: 5px;
+        }
+
+        /* Исправленные стили для информации о выбранных блюдах */
+        .selected-dish-info {
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(26, 10, 10, 0.7);
+            border-radius: 5px;
+            border-left: 3px solid var(--primary-matte-red);
+            display: none;
+        }
+
+        .selected-dish-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-light);
+        }
+
+        .selected-dish-meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            gap: 10px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .user-info {
+            color: var(--text-light);
+            margin-right: 15px;
+            font-weight: 500;
+        }
+
+        .auth-links .btn {
+            margin-left: 10px;
+        }
+
+        .btn-outline-light {
+            border-color: var(--text-light);
+            color: var(--text-light);
+        }
+
+        .btn-outline-light:hover {
+            background-color: var(--text-light);
+            color: var(--accent-dark);
+        }
+
+        /* Стили для кнопки списка покупок */
+        .shopping-cart-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            margin-right: 15px;
+        }
+
+        .shopping-cart-btn:hover {
+            transform: translateY(-2px);
+            color: white;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+
+        /* Адаптивность для мобильных устройств */
+        @media (max-width: 768px) {
+            .dish-select-container {
+                flex-direction: column;
+            }
+
+            .dish-image-container {
+                width: 100%;
+                height: 120px;
+            }
+
+            .dish-select {
+                background: rgba(26, 10, 10, 0.95) !important;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .shopping-cart-btn {
+                padding: 6px 12px;
+                font-size: 0.9rem;
+                margin-right: 10px;
+            }
+
+            .calendar-day {
+                height: 60px;
+            }
+
+            .day-number {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Навигационная панель -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <div class="brand-container">
+                <img src="{% static 'B8_lightmode.png' %}" class="logo" alt="B8 Logo">
+                <a class="navbar-brand" href="{% url 'home' %}">B8 РЕЦЕПТЫ</a>
+            </div>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Переключить навигацию">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                        <!-- Кнопка списка покупок в навигационной панели -->
+                        <li class="nav-item">
+                            <a class="shopping-cart-btn" href="{% url 'shopping_list' %}">
+                                🛒 Список покупок
+                            </a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                ПРИВЕТ, {{ user.username|upper }}
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="{% url 'home' %}">Главная</a></li>
+                                <li><a class="dropdown-item" href="{% url 'profile' %}">Профиль</a></li>
+                                <li><a class="dropdown-item" href="{% url 'catalog' %}">Каталог</a></li>
+                                <li><a class="dropdown-item" href="{% url 'recipes' %}">Рецепты</a></li>
+                                <li><a class="dropdown-item" href="{% url 'menu' %}">Меню</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'fridge' %}">Ваш холодильник</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'logout' %}">Выйти</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <div class="auth-links d-flex">
+                            <a href="{% url 'login' %}" class="btn btn-outline-light">Войти</a>
+                            <a href="{% url 'register' %}" class="btn btn-outline-light">Регистрация</a>
+                        </div>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Основной контент -->
+    <div class="container mt-4">
+        {% if user.is_authenticated %}
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <button class="calendar-nav-btn" id="prev-month">← Предыдущий</button>
+                <h3 id="current-month" data-year="{{ current_year }}" data-month="{{ current_month }}">
+                    {{ current_month }}.{{ current_year }}
+                </h3>
+                <button class="calendar-nav-btn" id="next-month">Следующий →</button>
+            </div>
+
+            <div class="calendar-grid" id="calendar-grid">
+                <!-- Дни будут сгенерированы через JavaScript -->
+            </div>
+        </div>
+
+        <!-- Блок информации о дне -->
+        <div class="day-info" id="day-info">
+            <div class="day-info-header">
+                <h3 class="day-info-title">Меню на <span id="selected-day">1</span> число</h3>
+                <button id="close-day-info" style="background: none; border: none; color: var(--text-light); font-size: 24px; cursor: pointer;">×</button>
+            </div>
+
+            <!-- Завтрак -->
+            <div class="meal-section">
+                <h5 class="meal-title">
+                    <span class="meal-dot-large breakfast-dot"></span>
+                    Завтрак
+                </h5>
+                <div class="dish-select-container">
+                    <select class="dish-select" id="breakfast-select" style="background: rgba(26, 10, 10, 0.9); color: var(--text-light);">
+                        <option value="" style="background: var(--accent-darker); color: var(--text-light);">-- Выберите блюдо --</option>
+                        {% for dish in dishes %}
+                        <option value="{{ dish.id }}" data-image="{% if dish.image %}{{ dish.image.url }}{% endif %}" data-cooking-time="{{ dish.cooking_time }}" data-difficulty="{{ dish.get_difficulty_display }}" data-calories="{{ dish.calories }}" style="background: var(--accent-darker); color: var(--text-light);">
+                            {{ dish.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <div class="dish-image-container" id="breakfast-image">
+                        <div class="dish-image-placeholder">Выберите блюдо</div>
+                    </div>
+                </div>
+                <div class="selected-dish-info" id="breakfast-info">
+                    <div class="selected-dish-name" id="breakfast-name"></div>
+                    <div class="selected-dish-meta">
+                        <span>⏱️ <span id="breakfast-time"></span> мин</span>
+                        <span>📊 <span id="breakfast-difficulty"></span></span>
+                        <span>🔥 <span id="breakfast-calories"></span> ккал</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Обед -->
+            <div class="meal-section">
+                <h5 class="meal-title">
+                    <span class="meal-dot-large lunch-dot"></span>
+                    Обед
+                </h5>
+                <div class="dish-select-container">
+                    <select class="dish-select" id="lunch-select" style="background: rgba(26, 10, 10, 0.9); color: var(--text-light);">
+                        <option value="" style="background: var(--accent-darker); color: var(--text-light);">-- Выберите блюдо --</option>
+                        {% for dish in dishes %}
+                        <option value="{{ dish.id }}" data-image="{% if dish.image %}{{ dish.image.url }}{% endif %}" data-cooking-time="{{ dish.cooking_time }}" data-difficulty="{{ dish.get_difficulty_display }}" data-calories="{{ dish.calories }}" style="background: var(--accent-darker); color: var(--text-light);">
+                            {{ dish.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <div class="dish-image-container" id="lunch-image">
+                        <div class="dish-image-placeholder">Выберите блюдо</div>
+                    </div>
+                </div>
+                <div class="selected-dish-info" id="lunch-info">
+                    <div class="selected-dish-name" id="lunch-name"></div>
+                    <div class="selected-dish-meta">
+                        <span>⏱️ <span id="lunch-time"></span> мин</span>
+                        <span>📊 <span id="lunch-difficulty"></span></span>
+                        <span>🔥 <span id="lunch-calories"></span> ккал</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ужин -->
+            <div class="meal-section">
+                <h5 class="meal-title">
+                    <span class="meal-dot-large dinner-dot"></span>
+                    Ужин
+                </h5>
+                <div class="dish-select-container">
+                    <select class="dish-select" id="dinner-select" style="background: rgba(26, 10, 10, 0.9); color: var(--text-light);">
+                        <option value="" style="background: var(--accent-darker); color: var(--text-light);">-- Выберите блюдо --</option>
+                        {% for dish in dishes %}
+                        <option value="{{ dish.id }}" data-image="{% if dish.image %}{{ dish.image.url }}{% endif %}" data-cooking-time="{{ dish.cooking_time }}" data-difficulty="{{ dish.get_difficulty_display }}" data-calories="{{ dish.calories }}" style="background: var(--accent-darker); color: var(--text-light);">
+                            {{ dish.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <div class="dish-image-container" id="dinner-image">
+                        <div class="dish-image-placeholder">Выберите блюдо</div>
+                    </div>
+                </div>
+                <div class="selected-dish-info" id="dinner-info">
+                    <div class="selected-dish-name" id="dinner-name"></div>
+                    <div class="selected-dish-meta">
+                        <span>⏱️ <span id="dinner-time"></span> мин</span>
+                        <span>📊 <span id="dinner-difficulty"></span></span>
+                        <span>🔥 <span id="dinner-calories"></span> ккал</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-3">
+                <button class="btn btn-success w-100" id="save-menu">Сохранить меню</button>
+            </div>
+        </div>
+        {% else %}
+        <div class="alert alert-warning text-center">
+            <h4>Доступ ограничен</h4>
+            <p>Для работы с календарем питания необходимо войти в систему.</p>
+            <div class="mt-3">
+                <a href="{% url 'login' %}" class="btn btn-primary">Войти</a>
+                <a href="{% url 'register' %}" class="btn btn-outline-light">Регистрация</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Bootstrap JS и зависимости -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Пользовательский JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Элементы DOM
+            const calendarGrid = document.getElementById('calendar-grid');
+            const dayInfo = document.getElementById('day-info');
+            const selectedDayElement = document.getElementById('selected-day');
+            const closeButton = document.getElementById('close-day-info');
+            const saveMenuButton = document.getElementById('save-menu');
+            const prevMonthBtn = document.getElementById('prev-month');
+            const nextMonthBtn = document.getElementById('next-month');
+            const currentMonthElement = document.getElementById('current-month');
+
+            // Текущая дата
+            let currentYear = parseInt(currentMonthElement.dataset.year);
+            let currentMonth = parseInt(currentMonthElement.dataset.month);
+
+            // Инициализация календаря
+            function initCalendar() {
+                generateCalendar(currentYear, currentMonth);
+                updateMonthDisplay();
+            }
+
+            // Генерация календаря
+            function generateCalendar(year, month) {
+                calendarGrid.innerHTML = '';
+
+                // Получаем первый день месяца и количество дней
+                const firstDay = new Date(year, month - 1, 1).getDay();
+                const daysInMonth = new Date(year, month, 0).getDate();
+
+                // Добавляем пустые ячейки для дней предыдущего месяца
+                for (let i = 0; i < firstDay; i++) {
+                    const emptyDay = document.createElement('div');
+                    emptyDay.className = 'calendar-day empty';
+                    calendarGrid.appendChild(emptyDay);
+                }
+
+                // Добавляем дни текущего месяца
+                for (let i = 1; i <= daysInMonth; i++) {
+                    const dayElement = document.createElement('div');
+                    dayElement.className = 'calendar-day';
+                    dayElement.innerHTML = `
+                        <div class="day-number">${i}</div>
+                        <div class="meal-indicators">
+                            <div class="meal-dot breakfast-dot" data-meal="breakfast"></div>
+                            <div class="meal-dot lunch-dot" data-meal="lunch"></div>
+                            <div class="meal-dot dinner-dot" data-meal="dinner"></div>
+                        </div>
+                    `;
+                    dayElement.setAttribute('data-day', i);
+
+                    // Обработчик клика по дню
+                    dayElement.addEventListener('click', function() {
+                        selectDay(this);
+                    });
+
+                    calendarGrid.appendChild(dayElement);
+                }
+
+                // Загружаем данные меню для этого месяца
+                loadMonthMenu(year, month);
+            }
+
+            // Выбор дня
+            function selectDay(dayElement) {
+                // Убираем активный класс у всех дней
+                document.querySelectorAll('.calendar-day').forEach(day => {
+                    day.classList.remove('active');
+                });
+
+                // Добавляем активный класс к выбранному дню
+                dayElement.classList.add('active');
+
+                // Показываем блок информации о дне
+                const dayNumber = dayElement.getAttribute('data-day');
+                selectedDayElement.textContent = dayNumber;
+
+                // Загружаем меню для выбранного дня
+                loadDayMenu(dayNumber);
+
+                // Показываем блок информации
+                dayInfo.classList.add('active');
+            }
+
+            // Загрузка меню для дня
+            function loadDayMenu(day) {
+                fetch(`{% url 'get_daily_menu' %}?day=${day}&year=${currentYear}&month=${currentMonth}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const menu = data.menu;
+
+                            // Заполняем селекты и обновляем изображения
+                            updateMealSelection('breakfast', menu.breakfast);
+                            updateMealSelection('lunch', menu.lunch);
+                            updateMealSelection('dinner', menu.dinner);
+
+                            // Обновляем индикаторы на календаре
+                            updateDayIndicators(day, menu);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Ошибка загрузки меню:', error);
+                    });
+            }
+
+            // Обновление выбора блюда и изображения
+            function updateMealSelection(mealType, dish) {
+                const select = document.getElementById(`${mealType}-select`);
+                const imageContainer = document.getElementById(`${mealType}-image`);
+                const infoContainer = document.getElementById(`${mealType}-info`);
+                const nameElement = document.getElementById(`${mealType}-name`);
+                const timeElement = document.getElementById(`${mealType}-time`);
+                const difficultyElement = document.getElementById(`${mealType}-difficulty`);
+                const caloriesElement = document.getElementById(`${mealType}-calories`);
+
+                if (dish) {
+                    select.value = dish.id;
+
+                    // Обновляем изображение
+                    if (dish.image) {
+                        imageContainer.innerHTML = `<img src="${dish.image}" alt="${dish.name}" class="dish-image">`;
+                    } else {
+                        imageContainer.innerHTML = `<div class="dish-image-placeholder">${dish.name}</div>`;
+                    }
+
+                    // Показываем информацию о блюде
+                    nameElement.textContent = dish.name;
+                    timeElement.textContent = dish.cooking_time;
+                    difficultyElement.textContent = dish.difficulty;
+                    caloriesElement.textContent = dish.calories;
+                    infoContainer.style.display = 'block';
+                } else {
+                    select.value = '';
+                    imageContainer.innerHTML = '<div class="dish-image-placeholder">Выберите блюдо</div>';
+                    infoContainer.style.display = 'none';
+                }
+            }
+
+            // Загрузка меню для всего месяца
+            function loadMonthMenu(year, month) {
+                // Здесь можно добавить загрузку всех меню месяца
+                // Пока просто сбрасываем индикаторы
+                document.querySelectorAll('.calendar-day:not(.empty)').forEach(dayElement => {
+                    const day = dayElement.getAttribute('data-day');
+                    updateDayIndicators(day, {});
+                });
+            }
+
+            // Обновление индикаторов на календаре
+            function updateDayIndicators(day, menu) {
+                const dayElement = document.querySelector(`.calendar-day[data-day="${day}"]`);
+                if (dayElement) {
+                    const indicators = dayElement.querySelectorAll('.meal-dot');
+
+                    indicators.forEach(indicator => {
+                        const mealType = indicator.getAttribute('data-meal');
+                        if (menu[mealType]) {
+                            indicator.style.opacity = '1';
+                        } else {
+                            indicator.style.opacity = '0.3';
+                        }
+                    });
+                }
+            }
+
+            // Сохранение меню
+            saveMenuButton.addEventListener('click', function() {
+                const day = selectedDayElement.textContent;
+                const breakfast = document.getElementById('breakfast-select').value;
+                const lunch = document.getElementById('lunch-select').value;
+                const dinner = document.getElementById('dinner-select').value;
+
+                const formData = new FormData();
+                formData.append('day', day);
+                formData.append('year', currentYear);
+                formData.append('month', currentMonth);
+                formData.append('meal_type', 'breakfast');
+                formData.append('dish_id', breakfast);
+
+                // Сохраняем завтрак
+                fetch('{% url 'update_daily_menu' %}', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken')
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Сохраняем обед
+                        formData.set('meal_type', 'lunch');
+                        formData.set('dish_id', lunch);
+                        return fetch('{% url 'update_daily_menu' %}', {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-CSRFToken': getCookie('csrftoken')
+                            }
+                        });
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Сохраняем ужин
+                        formData.set('meal_type', 'dinner');
+                        formData.set('dish_id', dinner);
+                        return fetch('{% url 'update_daily_menu' %}', {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-CSRFToken': getCookie('csrftoken')
+                            }
+                        });
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Меню успешно сохранено!');
+                        loadDayMenu(day); // Обновляем индикаторы
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка сохранения меню:', error);
+                    alert('Ошибка при сохранении меню');
+                });
+            });
+
+            // Навигация по месяцам
+            prevMonthBtn.addEventListener('click', function() {
+                currentMonth--;
+                if (currentMonth < 1) {
+                    currentMonth = 12;
+                    currentYear--;
+                }
+                initCalendar();
+            });
+
+            nextMonthBtn.addEventListener('click', function() {
+                currentMonth++;
+                if (currentMonth > 12) {
+                    currentMonth = 1;
+                    currentYear++;
+                }
+                initCalendar();
+            });
+
+            // Обновление отображения месяца
+            function updateMonthDisplay() {
+                const monthNames = [
+                    'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
+                    'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
+                ];
+                currentMonthElement.textContent = `${monthNames[currentMonth - 1]} ${currentYear}`;
+                currentMonthElement.dataset.year = currentYear;
+                currentMonthElement.dataset.month = currentMonth;
+            }
+
+            // Закрытие блока информации
+            closeButton.addEventListener('click', function() {
+                dayInfo.classList.remove('active');
+                document.querySelectorAll('.calendar-day').forEach(day => {
+                    day.classList.remove('active');
+                });
+            });
+
+            // Обработчики изменения выбора блюд
+            ['breakfast', 'lunch', 'dinner'].forEach(mealType => {
+                const select = document.getElementById(`${mealType}-select`);
+                const imageContainer = document.getElementById(`${mealType}-image`);
+                const infoContainer = document.getElementById(`${mealType}-info`);
+                const nameElement = document.getElementById(`${mealType}-name`);
+                const timeElement = document.getElementById(`${mealType}-time`);
+                const difficultyElement = document.getElementById(`${mealType}-difficulty`);
+                const caloriesElement = document.getElementById(`${mealType}-calories`);
+
+                select.addEventListener('change', function() {
+                    const selectedOption = this.options[this.selectedIndex];
+
+                    if (this.value) {
+                        const imageUrl = selectedOption.getAttribute('data-image');
+                        const cookingTime = selectedOption.getAttribute('data-cooking-time');
+                        const difficulty = selectedOption.getAttribute('data-difficulty');
+                        const calories = selectedOption.getAttribute('data-calories');
+                        const dishName = selectedOption.textContent;
+
+                        // Обновляем изображение
+                        if (imageUrl) {
+                            imageContainer.innerHTML = `<img src="${imageUrl}" alt="${dishName}" class="dish-image">`;
+                        } else {
+                            imageContainer.innerHTML = `<div class="dish-image-placeholder">${dishName}</div>`;
+                        }
+
+                        // Показываем информацию о блюде
+                        nameElement.textContent = dishName;
+                        timeElement.textContent = cookingTime;
+                        difficultyElement.textContent = difficulty;
+                        caloriesElement.textContent = calories;
+                        infoContainer.style.display = 'block';
+                    } else {
+                        imageContainer.innerHTML = '<div class="dish-image-placeholder">Выберите блюдо</div>';
+                        infoContainer.style.display = 'none';
+                    }
+                });
+            });
+
+            // Функция для получения CSRF токена
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+
+            // Инициализация
+            initCalendar();
+        });
+    </script>
+</body>
+</html>
