@@ -802,7 +802,6 @@ def remove_shopping_item(request):
 @login_required
 @require_POST
 def clear_shopping_list(request):
-    """Очистка всего списка покупок"""
     try:
         ShoppingListItem.objects.filter(user=request.user).delete()
         return JsonResponse({'success': True, 'message': 'Список покупок очищен'})
