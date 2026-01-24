@@ -1,555 +1,108 @@
+{% extends 'base.html' %}
+ <link rel="stylesheet" href="dish_detail.css">
 {% load static %}
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ dish.name }} - B8 Рецепты</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-dark-red: #6A0C0C;
-            --primary-matte-red: #7A1C1C;
-            --accent-dark: #1A0A0A;
-            --accent-darker: #0F0505;
-            --card-bg: #251515;
-            --text-light: #F0F0F0;
-            --text-muted: #B0B0B0;
-        }
 
-        body {
-            background-color: var(--accent-darker);
-            color: var(--text-light);
-            font-family: 'Montserrat', sans-serif;
-            line-height: 1.6;
-            font-weight: 400;
-        }
+{% block title %}{{ dish.name }} - B8 Рецепты{% endblock %}
 
-        .navbar {
-            background: linear-gradient(135deg, var(--accent-dark) 0%, var(--primary-dark-red) 100%);
-            box-shadow: 0 2px 15px rgba(0,0,0,0.4);
-            border-bottom: 1px solid rgba(106, 12, 12, 0.5);
-        }
+{% block content %}
+<a href="{% url 'cuisine_detail' dish.cuisine.id %}" class="back-button">
+    ← Назад к {{ dish.cuisine.name }}
+</a>
 
-        .brand-container {
-            display: flex;
-            align-items: center;
-        }
-
-        .logo {
-            width: 40px;
-            height: 40px;
-            margin-right: 12px;
-        }
-
-        .navbar-brand {
-            font-weight: 600;
-            font-size: 1.5rem;
-            color: var(--text-light) !important;
-            letter-spacing: 0.5px;
-            margin: 0;
-        }
-
-        /* Исправленные стили для выпадающего меню */
-        .dropdown-menu {
-            background: linear-gradient(135deg, var(--card-bg) 0%, #2A1818 100%) !important;
-            border: 1px solid var(--primary-dark-red) !important;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
-        }
-
-        .dropdown-item {
-            color: var(--text-light) !important;
-            font-weight: 400;
-            transition: all 0.2s ease;
-        }
-
-        .dropdown-item:hover {
-            background-color: var(--primary-matte-red) !important;
-            color: var(--text-light) !important;
-            font-weight: 500;
-        }
-
-        .dish-container {
-            background: linear-gradient(135deg, var(--card-bg) 0%, #2A1818 100%);
-            border-radius: 15px;
-            border: 1px solid rgba(106, 12, 12, 0.3);
-            padding: 30px;
-            margin-top: 30px;
-        }
-
-        .dish-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .dish-title {
-            color: var(--text-light);
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-
-        .dish-meta {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            color: var(--text-muted);
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .dish-image-main {
-            width: 100%;
-            max-height: 500px;
-            object-fit: cover;
-            border-radius: 12px;
-            margin-bottom: 30px;
-        }
-
-        .cuisine-flag {
-            width: 20px;
-            height: 15px;
-            border-radius: 2px;
-            margin-right: 5px;
-
-        }
-
-        .info-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-left: 4px solid var(--primary-matte-red);
-        }
-
-        .info-title {
-            color: var(--text-light);
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
-
-        .ingredients-list-container {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .ingredient-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 15px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .ingredient-text {
-            color: var(--text-light);
-            flex-grow: 1;
-        }
-
-        .add-single-ingredient {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            border: none;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 15px;
-            font-size: 0.85rem;
-            transition: all 0.3s ease;
-        }
-
-        .add-single-ingredient:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
-        }
-
-        .back-button {
-            background: linear-gradient(135deg, var(--primary-dark-red) 0%, var(--primary-matte-red) 100%);
-            border: none;
-            color: var(--text-light);
-            padding: 10px 20px;
-            border-radius: 25px;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .back-button:hover {
-            transform: translateY(-2px);
-            color: var(--text-light);
-            text-decoration: none;
-        }
-
-        .user-info {
-            color: var(--text-light);
-            margin-right: 15px;
-            font-weight: 500;
-        }
-
-        .auth-links .btn {
-            margin-left: 10px;
-        }
-
-        .btn-outline-light {
-            border-color: var(--text-light);
-            color: var(--text-light);
-        }
-
-        .btn-outline-light:hover {
-            background-color: var(--text-light);
-            color: var(--accent-dark);
-        }
-
-        .actions-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-left: 4px solid var(--primary-matte-red);
-        }
-
-        .dish-actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .dish-actions .btn {
-            margin-bottom: 5px;
-        }
-
-        /* Стили для кнопки списка покупок */
-        .shopping-cart-btn {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            border: none;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.3s ease;
-            font-weight: 500;
-            margin-right: 15px;
-        }
-
-        .shopping-cart-btn:hover {
-            transform: translateY(-2px);
-            color: white;
-            text-decoration: none;
-            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
-        }
-
-        .recipe-steps {
-            white-space: pre-line;
-            line-height: 1.8;
-        }
-
-        /* Адаптивность */
-        @media (max-width: 768px) {
-            .dish-meta {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .dish-actions {
-                flex-direction: column;
-            }
-
-            .ingredient-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-
-            .add-single-ingredient {
-                align-self: flex-end;
-            }
-        }
-    </style>
-</head>
-<body>
-    <!-- Навигационная панель -->
-    <nav class="navbar navbar-expand-lg">
-        <div class="container">
-            <div class="brand-container">
-                <img src="{% static 'B8_lightmode.png' %}" class="logo" alt="B8 Logo">
-                <a class="navbar-brand" href="{% url 'home' %}">B8 РЕЦЕПТЫ</a>
-            </div>
-
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Переключить навигацию">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                <ul class="navbar-nav">
-                    {% if user.is_authenticated %}
-                        <!-- Кнопка списка покупок в навигационной панели -->
-                        <li class="nav-item">
-                            <a class="shopping-cart-btn" href="{% url 'shopping_list' %}">
-                                🛒 Список покупок
-                            </a>
-                        </li>
-
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                ПРИВЕТ, {{ user.username|upper }}
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="{% url 'home' %}">Главная</a></li>
-                                <li><a class="dropdown-item" href="{% url 'catalog' %}">Каталог</a></li>
-                                <li><a class="dropdown-item" href="{% url 'recipes' %}">Рецепты</a></li>
-                                <li><a class="dropdown-item" href="{% url 'menu' %}">Меню</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{% url 'fridge' %}">Ваш холодильник</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{% url 'logout' %}">Выйти</a></li>
-                            </ul>
-                        </li>
-                    {% else %}
-                        <div class="auth-links d-flex">
-                            <a href="{% url 'login' %}" class="btn btn-outline-light">Войти</a>
-                            <a href="{% url 'register' %}" class="btn btn-outline-light">Регистрация</a>
-                        </div>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Основной контент -->
-    <div class="container">
-        <a href="{% url 'cuisine_detail' dish.cuisine.id %}" class="back-button">
-            ← Назад к {{ dish.cuisine.name }}
-        </a>
-
-        <div class="dish-container">
-            <div class="dish-header">
-                <h1 class="dish-title">{{ dish.name }}</h1>
-                <div class="dish-meta">
-                    <span class="cuisine">
-                        {% if dish.cuisine.image %}
-                        <img src="{{ dish.cuisine.image.url }}" alt="{{ dish.cuisine.name }}" class="cuisine-flag">
-                        {% endif %}
-                        {{ dish.cuisine.name }}
-                    </span>
-                    <span class="time">⏱ {{ dish.cooking_time }} минут</span>
-                    <span class="difficulty {{ dish.difficulty }}">{{ dish.get_difficulty_display }}</span>
-                    <span class="calories">🔥 {{ dish.calories }} ккал</span>
-                </div>
-            </div>
-
-            <!-- Картинка блюда -->
-            <div class="dish-image-main-container">
-                {% if dish.image %}
-                <img src="{{ dish.image.url }}" alt="{{ dish.name }}" class="dish-image-main">
-                {% else %}
-                <div class="dish-image-main" style="background: linear-gradient(135deg, var(--primary-dark-red) 0%, #5A0A0A 100%); display: flex; align-items: center; justify-content: center; color: var(--text-light); font-size: 1.5rem;">
-                    {{ dish.name }}
-                </div>
+<div class="dish-container">
+    <div class="dish-header">
+        <h1 class="dish-title">{{ dish.name }}</h1>
+        <div class="dish-meta">
+            <span class="cuisine">
+                {% if dish.cuisine.image %}
+                <img src="{{ dish.cuisine.image.url }}" alt="{{ dish.cuisine.name }}" class="cuisine-flag">
                 {% endif %}
-            </div>
+                {{ dish.cuisine.name }}
+            </span>
+            <span class="time">⏱ {{ dish.cooking_time }} минут</span>
+            <span class="difficulty {{ dish.difficulty }}">{{ dish.get_difficulty_display }}</span>
+            <span class="calories">🔥 {{ dish.calories }} ккал</span>
+        </div>
+    </div>
 
-            <!-- Добавляем блок с действиями -->
-            {% if user.is_authenticated %}
-            <div class="actions-card">
-                <h3 class="info-title">Действия</h3>
-                <div class="dish-actions">
-                    <button class="btn btn-success add-to-fridge" data-dish-id="{{ dish.id }}">
-                        🧊 Добавить в холодильник
-                    </button>
-                    <button class="btn btn-primary add-all-to-shopping-list" data-dish-id="{{ dish.id }}">
-                        📝 Все в список покупок
-                    </button>
-                    <button id="likeButton" class="btn {% if is_liked %}btn-danger{% else %}btn-outline-danger{% endif %} favorite-btn"
-                            data-dish-id="{{ dish.id }}">
-                        {% if is_liked %}❤️ В избранном{% else %}🤍 В избранное{% endif %}
-                    </button>
-                </div>
-            </div>
-            {% endif %}
+    <!-- Картинка блюда -->
+    <div class="dish-image-main-container">
+        {% if dish.image %}
+        <img src="{{ dish.image.url }}" alt="{{ dish.name }}" class="dish-image-main">
+        {% else %}
+        <div class="dish-image-main" style="background: linear-gradient(135deg, var(--primary-dark-red) 0%, #5A0A0A 100%); display: flex; align-items: center; justify-content: center; color: var(--text-light); font-size: 1.5rem;">
+            {{ dish.name }}
+        </div>
+        {% endif %}
+    </div>
 
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="info-card">
-                        <h3 class="info-title">Описание</h3>
-                        <p>{{ dish.description }}</p>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="info-card">
-                        <h3 class="info-title">Ингредиенты</h3>
-                        <div class="ingredients-list-container">
-                            {% for ingredient in dish.ingredients_list %}
-                            <div class="ingredient-item">
-                                <span class="ingredient-text">{{ ingredient }}</span>
-                                {% if user.is_authenticated %}
-                                <button class="btn btn-sm add-single-ingredient"
-                                        data-ingredient-name="{{ ingredient }}">
-                                    ➕ В список покупок
-                                </button>
-                                {% endif %}
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- Добавляем блок с действиями -->
+    {% if user.is_authenticated %}
+    <div class="actions-card">
+        <h3 class="info-title">Действия</h3>
+        <div class="dish-actions">
+            <button class="btn btn-success add-to-fridge" data-dish-id="{{ dish.id }}">
+                🧊 Добавить в холодильник
+            </button>
+            <button class="btn btn-primary add-all-to-shopping-list" data-dish-id="{{ dish.id }}">
+                📝 Все в список покупок
+            </button>
+            <button id="likeButton" class="btn {% if is_liked %}btn-danger{% else %}btn-outline-danger{% endif %} favorite-btn"
+                    data-dish-id="{{ dish.id }}">
+                {% if is_liked %}❤️ В избранном{% else %}🤍 В избранное{% endif %}
+            </button>
+        </div>
+    </div>
+    {% endif %}
 
+    <div class="row">
+        <div class="col-md-6">
             <div class="info-card">
-                <h3 class="info-title">Рецепт приготовления</h3>
-                <div class="recipe-steps">
-                    {{ dish.recipe|linebreaks }}
+                <h3 class="info-title">Описание</h3>
+                <p>{{ dish.description }}</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="info-card">
+                <h3 class="info-title">Ингредиенты</h3>
+                <div class="ingredients-list-container">
+                    {% for ingredient in dish.ingredients_list %}
+                    <div class="ingredient-item">
+                        <span class="ingredient-text">{{ ingredient }}</span>
+                        {% if user.is_authenticated %}
+                        <button class="btn btn-sm add-single-ingredient"
+                                data-ingredient-name="{{ ingredient }}">
+                            ➕ В список покупок
+                        </button>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Bootstrap JS и зависимости -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Скрытый элемент с URL для JavaScript -->
-    <div id="urls"
-         data-add-to-fridge="{% url 'add_ingredients_from_dish' 0 %}"
-         data-add-to-shopping="{% url 'add_dish_ingredients_to_shopping_list' 0 %}"
-         data-toggle-like="{% url 'toggle_like_dish' 0 %}"
-         style="display: none;">
+    <div class="info-card">
+        <h3 class="info-title">Рецепт приготовления</h3>
+        <div class="recipe-steps">
+            {{ dish.recipe|linebreaks }}
+        </div>
     </div>
+</div>
+{% endblock %}
 
-    <!-- JavaScript для функциональности -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Получаем URL из data-атрибутов
-            const urls = document.getElementById('urls').dataset;
+{% block extra_scripts %}
 
-            // Добавление отдельного ингредиента в список покупок
-            const addSingleButtons = document.querySelectorAll('.add-single-ingredient');
-            addSingleButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const ingredientName = this.getAttribute('data-ingredient-name');
 
-                    fetch('{% url "add_single_ingredient_to_shopping_list" %}', {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRFToken': '{{ csrf_token }}',
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: new URLSearchParams({
-                            'ingredient_name': ingredientName
-                        })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert(data.message);
-                        } else {
-                            alert('Ошибка: ' + data.error);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Произошла ошибка при добавлении ингредиента');
-                    });
-                });
-            });
+<!-- Скрытый элемент с URL для JavaScript -->
+<div id="urls"
+     data-add-to-fridge="{% url 'add_ingredients_from_dish' 0 %}"
+     data-add-to-shopping="{% url 'add_dish_ingredients_to_shopping_list' 0 %}"
+     data-toggle-like="{% url 'toggle_like_dish' 0 %}"
+     style="display: none;">
+</div>
 
-            // Добавление всех ингредиентов в список покупок
-            const addAllButton = document.querySelector('.add-all-to-shopping-list');
-            if (addAllButton) {
-                addAllButton.addEventListener('click', function() {
-                    const dishId = this.getAttribute('data-dish-id');
-                    const url = urls.addToShopping.replace('0', dishId);
+<script src="dish_detail.js">
 
-                    fetch(url, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRFToken': '{{ csrf_token }}',
-                        },
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert(data.message);
-                        } else {
-                            alert('Ошибка: ' + data.error);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Произошла ошибка при добавлении ингредиентов');
-                    });
-                });
-            }
-
-            // Добавление в холодильник
-            const addToFridgeButton = document.querySelector('.add-to-fridge');
-            if (addToFridgeButton) {
-                addToFridgeButton.addEventListener('click', function() {
-                    const dishId = this.getAttribute('data-dish-id');
-                    const url = urls.addToFridge.replace('0', dishId);
-
-                    fetch(url, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRFToken': '{{ csrf_token }}',
-                        },
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert(data.message);
-                        } else {
-                            alert('Ошибка: ' + data.error);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Произошла ошибка при добавлении в холодильник');
-                    });
-                });
-            }
-
-            // Избранное
-            const favoriteButton = document.querySelector('.favorite-btn');
-            if (favoriteButton) {
-                favoriteButton.addEventListener('click', function() {
-                    const dishId = this.getAttribute('data-dish-id');
-                    const url = urls.toggleLike.replace('0', dishId);
-
-                    fetch(url, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRFToken': '{{ csrf_token }}',
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            if (data.liked) {
-                                favoriteButton.innerHTML = '❤️ В избранном';
-                                favoriteButton.classList.remove('btn-outline-danger');
-                                favoriteButton.classList.add('btn-danger');
-                            } else {
-                                favoriteButton.innerHTML = '🤍 В избранное';
-                                favoriteButton.classList.remove('btn-danger');
-                                favoriteButton.classList.add('btn-outline-danger');
-                            }
-                        } else {
-                            alert('Ошибка: ' + data.error);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Произошла ошибка');
-                    });
-                });
-            }
-        });
-    </script>
-</body>
-</html>
+</script>
+{% endblock %}

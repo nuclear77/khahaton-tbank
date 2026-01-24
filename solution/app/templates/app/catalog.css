@@ -1,0 +1,101 @@
+.filters-section {
+        background: linear-gradient(135deg, var(--card-bg) 0%, #2A1818 100%);
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 25px;
+        border: 1px solid rgba(106, 12, 12, 0.3);
+    }
+
+    .cuisine-card {
+        background: linear-gradient(135deg, var(--card-bg) 0%, #2A1818 100%);
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+        overflow: hidden;
+        border: 1px solid rgba(106, 12, 12, 0.3);
+        height: 100%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+        cursor: pointer;
+        text-decoration: none;
+        display: block;
+        position: relative;
+    }
+
+    .cuisine-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+        border-color: rgba(122, 28, 28, 0.5);
+        text-decoration: none;
+    }
+
+    .cuisine-img {
+        height: 180px;
+        background: linear-gradient(135deg, var(--primary-dark-red) 0%, #5A0A0A 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-light);
+        font-weight: 500;
+        font-size: 1.2rem;
+        position: relative;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+    }
+
+    .cuisine-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .cuisine-card:hover .cuisine-img img {
+        transform: scale(1.05);
+    }
+
+    .cuisine-name {
+        font-weight: 500;
+        color: var(--text-light);
+        padding: 15px;
+        margin: 0;
+        font-size: 1.1rem;
+        border-top: 1px solid rgba(106, 12, 12, 0.3);
+        letter-spacing: 0.5px;
+        text-align: center;
+    }
+
+    .form-control, .form-select {
+        background: var(--accent-dark);
+        border: 1px solid rgba(106, 12, 12, 0.5);
+        color: var(--text-light);
+    }
+
+    .form-control:focus, .form-select:focus {
+        background: var(--accent-dark);
+        border-color: var(--primary-matte-red);
+        color: var(--text-light);
+        box-shadow: 0 0 0 0.2rem rgba(122, 28, 28, 0.25);
+    }
+
+    @media (max-width: 768px) {
+        .cuisine-img {
+            height: 140px;
+            font-size: 1rem;
+        }
+
+        .cuisine-name {
+            padding: 12px;
+            font-size: 1rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .cuisine-img {
+            height: 120px;
+        }
+
+        .cuisine-name {
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+    }

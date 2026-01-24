@@ -1,0 +1,181 @@
+.cuisine-header {
+        background: linear-gradient(135deg, var(--card-bg) 0%, #2A1818 100%);
+        border-radius: 10px;
+        padding: 30px;
+        margin-bottom: 30px;
+        border: 1px solid rgba(106, 12, 12, 0.3);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cuisine-image-container {
+        width: 100%;
+        height: 300px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .cuisine-image {
+        width: 100%;
+        height: 100%;
+        transition: transform 0.3s ease;
+    }
+
+    .cuisine-image:hover {
+        transform: scale(1.05);
+    }
+
+    .cuisine-title {
+        color: var(--text-light);
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+
+    .cuisine-description {
+        color: var(--text-muted);
+        font-size: 1.1rem;
+        line-height: 1.7;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .dish-card {
+        background: linear-gradient(135deg, var(--card-bg) 0%, #2A1818 100%);
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+        overflow: hidden;
+        border: 1px solid rgba(106, 12, 12, 0.3);
+        height: 100%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+        cursor: pointer;
+        position: relative;
+    }
+
+    .dish-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+        border-color: rgba(122, 28, 28, 0.5);
+    }
+
+    .dish-img {
+        height: 150px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dish-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .dish-card:hover .dish-img img {
+        transform: scale(1.1);
+    }
+
+    .dish-img-placeholder {
+        height: 100%;
+        background: linear-gradient(135deg, var(--primary-dark-red) 0%, #5A0A0A 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-light);
+        font-weight: 500;
+    }
+
+    .dish-name {
+        font-weight: 500;
+        color: var(--text-light);
+        padding: 15px;
+        margin: 0;
+        font-size: 1rem;
+        border-top: 1px solid rgba(106, 12, 12, 0.3);
+        letter-spacing: 0.5px;
+        text-align: center;
+    }
+
+    /* Кнопка лайка */
+    .like-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(0,0,0,0.7);
+        border: none;
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+        color: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        transition: all 0.3s ease;
+    }
+
+    .like-btn:hover:not(:disabled) {
+        background: rgba(122, 28, 28, 0.9);
+        transform: scale(1.1);
+    }
+
+    .like-btn.liked {
+        background: var(--primary-matte-red);
+    }
+
+    .like-btn.liked .heart-icon {
+        color: #ff6b6b;
+    }
+
+    .like-btn:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
+
+    .heart-icon {
+        font-size: 18px;
+        transition: all 0.3s ease;
+    }
+
+    @media (max-width: 768px) {
+        .cuisine-image-container {
+            height: 200px;
+        }
+
+        .dish-img {
+            height: 120px;
+        }
+
+        .dish-name {
+            padding: 12px;
+            font-size: 0.9rem;
+        }
+
+        .like-btn {
+            width: 30px;
+            height: 30px;
+        }
+
+        .heart-icon {
+            font-size: 16px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .cuisine-image-container {
+            height: 150px;
+        }
+
+        .dish-img {
+            height: 100px;
+        }
+
+        .dish-name {
+            font-size: 0.85rem;
+            padding: 10px;
+        }
+    }

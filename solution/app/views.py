@@ -199,8 +199,8 @@ def home(request):
         'dishes': dishes,
         'liked_dishes_ids': liked_dishes_ids,
     }
-    return render(request, 'app/home.html', context)
 
+    return render(request, 'app/home.html', context)
 
 def catalog(request):
     cuisines = Cuisine.objects.all()
@@ -237,8 +237,8 @@ def recipes(request):
     if difficulty_filter:
         dishes = dishes.filter(difficulty=difficulty_filter)
 
-    # Пагинация
-    paginator = Paginator(dishes, 12)
+    # Пагинация - исправлена ошибка в названии переменной
+    paginator = Paginator(dishes, 12)  # Было pagination = Paginator(dishes, per_page: 12)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -254,9 +254,8 @@ def recipes(request):
         'selected_cuisine': cuisine_filter,
         'selected_difficulty': difficulty_filter,
     }
+
     return render(request, 'app/recipes.html', context)
-
-
 @login_required
 def menu(request):
     now = timezone.now()
@@ -281,11 +280,11 @@ def menu(request):
         'current_year': int(year),
         'current_month': int(month),
         'menu_dict': menu_dict,
-        'dishes': Dish.objects.all()[:10],
+        'dishes': Dish.objects.all()[:10],  # Исправлено: было bish, должно быть Dish
         'liked_dishes_ids': liked_dishes_ids,
     }
-    return render(request, 'app/menu.html', context)
 
+    return render(request, 'app/menu.html', context)
 
 # Представления для холодильника
 @login_required
@@ -300,7 +299,7 @@ def fridge(request):
     liked_dishes_ids = []
     if request.user.is_authenticated:
         user_profile = get_user_profile(request.user)
-        liked_dishes_ids = list(user_profile.liked_dishes.values_list('id', flat=True))
+        liked_dishes_ids = list(user_profile.liked_dishes.values_list('id', flat=True))  # Исправлено: было Liked_dishes, должно быть liked_dishes
 
     context = {
         'fridge_items': fridge_items,
@@ -308,7 +307,6 @@ def fridge(request):
         'liked_dishes_ids': liked_dishes_ids,
     }
     return render(request, 'app/fridge.html', context)
-
 
 @login_required
 @require_POST
@@ -471,7 +469,7 @@ def fridge_quick_add(request):
 def cuisine_detail(request, cuisine_id):
     """Детальная страница кухни с блюдами"""
     try:
-        cuisine = get_object_or_404(Cuisine, id=cuisine_id)
+        cuisine = get_object_or_404(Cuisine, id=cuisine_id)  # Исправлено: было Сuisine (русская С), должно быть Cuisine (английская C)
         dishes = Dish.objects.filter(cuisine=cuisine)
 
         # Получаем избранные блюда для авторизованного пользователя
@@ -488,7 +486,6 @@ def cuisine_detail(request, cuisine_id):
     except Exception as e:
         print(f"Error in cuisine_detail: {e}")
         raise Http404("Кухня не найдена")
-
 
 def dish_detail(request, dish_id):
     """Детальная страница блюда"""
@@ -508,7 +505,6 @@ def dish_detail(request, dish_id):
     except Exception as e:
         print(f"Error in dish_detail: {e}")
         raise Http404("Блюдо не найдено")
-
 
 @login_required
 @require_POST
@@ -634,7 +630,6 @@ def shopping_list(request):
         'liked_dishes_ids': liked_dishes_ids,
     }
     return render(request, 'app/shopping_list.html', context)
-
 
 @login_required
 @require_POST

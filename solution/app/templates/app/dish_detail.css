@@ -1,0 +1,156 @@
+.dish-container {
+        background: linear-gradient(135deg, var(--card-bg) 0%, #2A1818 100%);
+        border-radius: 15px;
+        border: 1px solid rgba(106, 12, 12, 0.3);
+        padding: 30px;
+        margin-top: 30px;
+    }
+
+    .dish-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .dish-title {
+        color: var(--text-light);
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .dish-meta {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        color: var(--text-muted);
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+
+    .dish-image-main {
+        width: 100%;
+        max-height: 500px;
+        object-fit: cover;
+        border-radius: 12px;
+        margin-bottom: 30px;
+    }
+
+    .cuisine-flag {
+        width: 20px;
+        height: 15px;
+        border-radius: 2px;
+        margin-right: 5px;
+    }
+
+    .info-card {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-left: 4px solid var(--primary-matte-red);
+    }
+
+    .info-title {
+        color: var(--text-light);
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+
+    .ingredients-list-container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .ingredient-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 15px;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .ingredient-text {
+        color: var(--text-light);
+        flex-grow: 1;
+    }
+
+    .add-single-ingredient {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        border: none;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 15px;
+        font-size: 0.85rem;
+        transition: all 0.3s ease;
+    }
+
+    .add-single-ingredient:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+    }
+
+    .back-button {
+        background: linear-gradient(135deg, var(--primary-dark-red) 0%, var(--primary-matte-red) 100%);
+        border: none;
+        color: var(--text-light);
+        padding: 10px 20px;
+        border-radius: 25px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .back-button:hover {
+        transform: translateY(-2px);
+        color: var(--text-light);
+        text-decoration: none;
+    }
+
+    .actions-card {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-left: 4px solid var(--primary-matte-red);
+    }
+
+    .dish-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .dish-actions .btn {
+        margin-bottom: 5px;
+    }
+
+    .recipe-steps {
+        white-space: pre-line;
+        line-height: 1.8;
+    }
+
+    /* Адаптивность */
+    @media (max-width: 768px) {
+        .dish-meta {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .dish-actions {
+            flex-direction: column;
+        }
+
+        .ingredient-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .add-single-ingredient {
+            align-self: flex-end;
+        }
+    }

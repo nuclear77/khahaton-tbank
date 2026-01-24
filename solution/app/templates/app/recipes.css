@@ -1,0 +1,237 @@
+ .section-title {
+        color: var(--text-light);
+        border-bottom: 2px solid var(--primary-matte-red);
+        padding-bottom: 12px;
+        margin-bottom: 25px;
+        font-weight: 600;
+        text-align: center;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        font-size: 1.5rem;
+    }
+
+    .filters-section {
+        background: linear-gradient(135deg, var(--card-bg) 0%, #2A1818 100%);
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 25px;
+        border: 1px solid rgba(106, 12, 12, 0.3);
+    }
+
+    .filter-group {
+        margin-bottom: 15px;
+    }
+
+    .filter-label {
+        font-weight: 500;
+        margin-bottom: 8px;
+        color: var(--text-light);
+    }
+
+    .form-select, .form-control {
+        background: var(--accent-dark);
+        border: 1px solid rgba(106, 12, 12, 0.5);
+        color: var(--text-light);
+    }
+
+    .form-select:focus, .form-control:focus {
+        background: var(--accent-dark);
+        border-color: var(--primary-matte-red);
+        color: var(--text-light);
+        box-shadow: 0 0 0 0.2rem rgba(122, 28, 28, 0.25);
+    }
+
+    .search-btn {
+        background: linear-gradient(135deg, var(--primary-dark-red) 0%, var(--primary-matte-red) 100%);
+        border: none;
+        color: var(--text-light);
+        font-weight: 500;
+    }
+
+    .search-btn:hover {
+        background: linear-gradient(135deg, var(--primary-matte-red) 0%, var(--primary-dark-red) 100%);
+        transform: translateY(-2px);
+    }
+
+    .reset-btn {
+        background: transparent;
+        border: 1px solid var(--primary-matte-red);
+        color: var(--text-light);
+    }
+
+    .reset-btn:hover {
+        background: var(--primary-matte-red);
+        color: var(--text-light);
+    }
+
+    .dish-card {
+        background: linear-gradient(135deg, var(--card-bg) 0%, #2A1818 100%);
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+        overflow: hidden;
+        border: 1px solid rgba(106, 12, 12, 0.3);
+        height: 100%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+        cursor: pointer;
+        position: relative;
+    }
+
+    .dish-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+        border-color: rgba(122, 28, 28, 0.5);
+    }
+
+    .dish-img {
+        height: 150px;
+        background: linear-gradient(135deg, var(--primary-dark-red) 0%, #5A0A0A 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-light);
+        font-weight: 500;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dish-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .dish-card:hover .dish-img img {
+        transform: scale(1.05);
+    }
+
+    .dish-img::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.2);
+    }
+
+    .dish-name {
+        font-weight: 500;
+        color: var(--text-light);
+        padding: 15px;
+        margin: 0;
+        font-size: 1rem;
+        border-top: 1px solid rgba(106, 12, 12, 0.3);
+        letter-spacing: 0.5px;
+        text-align: center;
+    }
+
+    /* Кнопка лайка */
+    .like-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(0,0,0,0.7);
+        border: none;
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+        color: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        transition: all 0.3s ease;
+    }
+
+    .like-btn:hover:not(:disabled) {
+        background: rgba(122, 28, 28, 0.9);
+        transform: scale(1.1);
+    }
+
+    .like-btn.liked {
+        background: var(--primary-matte-red);
+    }
+
+    .like-btn.liked .heart-icon {
+        color: #ff6b6b;
+    }
+
+    .like-btn:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
+
+    .heart-icon {
+        font-size: 18px;
+        transition: all 0.3s ease;
+    }
+
+    /* Пагинация */
+    .page-link {
+        background: var(--accent-dark);
+        border: 1px solid rgba(106, 12, 12, 0.5);
+        color: var(--text-light);
+    }
+
+    .page-link:hover {
+        background: var(--primary-matte-red);
+        border-color: var(--primary-matte-red);
+        color: var(--text-light);
+    }
+
+    .page-item.active .page-link {
+        background: var(--primary-dark-red);
+        border-color: var(--primary-dark-red);
+    }
+
+    /* Стили для уведомлений */
+    .alert-toast {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1050;
+        min-width: 300px;
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: all 0.3s ease;
+    }
+
+    .alert-toast.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Адаптивность */
+    @media (max-width: 768px) {
+        .dish-img {
+            height: 120px;
+        }
+
+        .dish-name {
+            padding: 12px;
+            font-size: 0.9rem;
+        }
+
+        .like-btn {
+            width: 30px;
+            height: 30px;
+        }
+
+        .heart-icon {
+            font-size: 16px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .dish-img {
+            height: 100px;
+        }
+
+        .dish-name {
+            font-size: 0.85rem;
+            padding: 10px;
+        }
+    }
